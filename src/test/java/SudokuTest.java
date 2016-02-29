@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static java.util.Arrays.*;
 import static org.hamcrest.core.Is.is;
 
 /**

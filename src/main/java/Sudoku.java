@@ -44,34 +44,27 @@ public class Sudoku {
     private int moveCount = 0;
 
     public Sudoku(int[][] board) {
-        rows = new ArrayList<>();
-        columns = new ArrayList<>();
-        sectors = new ArrayList<>();
-        squares = new ArrayList<>();
+        rows = new ArrayList<>(9);
+        columns = new ArrayList<>(9);
+        sectors = new ArrayList<>(81);
+        squares = new ArrayList<>(9);
+
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                rows.add(new ArrayList<>(9));
+                columns.add(new ArrayList<>(9));
+                sectors.add(new ArrayList<>(9));
+            }
+        }
 
         for (int i=0; i<81; i++) {
             Square square = new Square(i);
+            square.row = i/9;
+            square.column = i%9;
             squares.add(square);
+            rows.get(square.row).add(square);
+            columns.get(square.column).add(square);
         }
-
-        int id = 0;
-        for (int i=0; i<9; i++){
-            List<Square> row = new ArrayList<>(9);
-            List<Square> column  = new ArrayList<>(9);
-            for (int j=0; j<9; j++){
-                Square square = squares.get(id++);
-                square.row = i;
-                square.column = j;
-                row.add(square);
-                column.add(new Square(-1));
-            }
-            rows.add(row);
-            columns.add(column);
-        }
-        for (Square square : squares) {
-            columns.get(square.column).set(square.row, square);
-        }
-
 
         for (int i=0; i<9; i++){
             sectors.add(new ArrayList<>(9));
@@ -162,12 +155,7 @@ public class Sudoku {
 
 
         Square beingPlayed = rows.get(row).get(column);
-        if (!ok(this)){
-            System.out.print("");
-        }
         for (Square square : rows.get(row)) {
-            if (square.id == 1)
-                System.out.print("");
             if (square.value == null && !square.equals(beingPlayed)) {
                 square.legalValues.remove(value);
                 if (square.legalValues.size() == 0) {
@@ -191,24 +179,9 @@ public class Sudoku {
                 }
             }
         }
-        if (!ok(this)){
-            System.out.println("");
-        }
         moveCount++;
         beingPlayed.set(value);
     }
-
-    private static boolean ok(Sudoku board){
-        for (Square s : board.getSquares()) {
-            if(s.value == null && s.legalValues.size() == 0)
-                return false;
-        }
-        return true;
-    }
-
-
-
-
 
     public static class Move {
         int id;
@@ -257,7 +230,6 @@ public class Sudoku {
             }
         }
 
-
         for (Square square : source.squares) {
             Square newSquare = new Square(square.id);
             newSquare.legalValues = square.legalValues;
@@ -274,13 +246,7 @@ public class Sudoku {
             int index = IJtoIndex(square.row, square.column);
             sectors.get(sector).set(index, newSquare);
         }
-
     }
-
-
-
-
-
 
     public String toString() {
         String s = "";
@@ -328,6 +294,7 @@ public class Sudoku {
         return index;
     }
 
+    //get sector from row,column pair
     private static int getSector(int i, int j) {
         if (i < 3 && j < 3)
             return 0;
@@ -348,46 +315,7 @@ public class Sudoku {
         return 8;
     }
 
-    private static Pair sectorAndIndexToIJ(int sector, int index) {
-
-        Pair offset = sectorToOffset(sector);
-        Pair ij = indexToIJ(index);
-        return new Pair(offset.i + ij.i, offset.j + ij.j);
-    }
-
-    private static Pair indexToIJ(int index) {
-        Pair result;
-        switch (index) {
-            case 0:
-                result = new Pair(0, 0);
-                break;
-            case 1:
-                result = new Pair(0, 1);
-                break;
-            case 2:
-                result = new Pair(0, 2);
-                break;
-            case 3:
-                result = new Pair(1, 0);
-                break;
-            case 4:
-                result = new Pair(1, 1);
-                break;
-            case 5:
-                result = new Pair(1, 2);
-                break;
-            case 6:
-                result = new Pair(2, 0);
-                break;
-            case 7:
-                result = new Pair(2, 1);
-                break;
-            default:
-                result = new Pair(2, 2);
-        }
-        return result;
-    }
-
+    //get offset from 0,0 of top-left square of inputed sector
     private static Pair sectorToOffset(int sector) {
         Pair result;
         switch (sector) {
@@ -475,14 +403,8 @@ public class Sudoku {
 
 //        System.out.println();
 
-        long now = System.currentTimeMillis();
         Sudoku s = new Sudoku(board3);
-        Solver.solve(s);
-        System.out.println(System.currentTimeMillis() - now);
         System.out.println(s);
-//        System.out.printf("solved: %s\n", s.isSolved());
-//        System.out.println(s);
-
     }
 
 
