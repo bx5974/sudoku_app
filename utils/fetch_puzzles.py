@@ -1,10 +1,10 @@
 import requests, re
 
 result = []
-f = file('easy_boards', 'w')
+f = file('hard_long', 'w')
 
-for i in range(100):
-    r = requests.get('http://view.websudoku.com/?level=1')
+for i in range(50):
+    r = requests.get('http://view.websudoku.com/?level=3')
     raw_puzzle = re.findall("\d{81}", r.text)
 
     id = re.findall("set_id=(\d*)\"", r.text)[0]

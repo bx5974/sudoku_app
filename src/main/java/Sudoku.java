@@ -49,12 +49,10 @@ public class Sudoku {
         sectors = new ArrayList<>(81);
         squares = new ArrayList<>(9);
 
-        for (int i=0; i<9; i++) {
-            for (int j=0; j<9; j++) {
-                rows.add(new ArrayList<>(9));
-                columns.add(new ArrayList<>(9));
-                sectors.add(new ArrayList<>(9));
-            }
+        for (int i = 0; i < 9; i++) {
+            rows.add(new ArrayList<>(9));
+            columns.add(new ArrayList<>(9));
+            sectors.add(new ArrayList<>(9));
         }
 
         for (int i=0; i<81; i++) {
@@ -64,10 +62,6 @@ public class Sudoku {
             squares.add(square);
             rows.get(square.row).add(square);
             columns.get(square.column).add(square);
-        }
-
-        for (int i=0; i<9; i++){
-            sectors.add(new ArrayList<>(9));
         }
 
         for (int squareId=0; squareId<81; squareId++) {
@@ -210,6 +204,10 @@ public class Sudoku {
             result = 31 * result + value;
             return result;
         }
+
+        public String toString(){
+            return "id: " + this.id + ", value: " + this.value;
+        }
     }
 
     public Sudoku(Sudoku source) {
@@ -239,13 +237,14 @@ public class Sudoku {
             newSquare.value = square.value;
             this.squares.add(newSquare);
 
-            columns.get(square.column).set(square.row, newSquare);
-            rows.get(square.row).set(square.column, newSquare);
+            this.columns.get(square.column).set(square.row, newSquare);
+            this.rows.get(square.row).set(square.column, newSquare);
 
             int sector = getSector(square.row, square.column);
             int index = IJtoIndex(square.row, square.column);
-            sectors.get(sector).set(index, newSquare);
+            this.sectors.get(sector).set(index, newSquare);
         }
+        this.moveCount = source.getMoveCount();
     }
 
     public String toString() {
@@ -387,25 +386,10 @@ public class Sudoku {
                 {0, 0, 0, 8, 5, 3, 0, 0, 6},
                 {0, 8, 9, 0, 1, 0, 5, 2, 0}};
 
-        int[][] board3 = {
-                {0,9,8,0,0,0,0,0,2},
-                {0,0,0,0,4,0,0,0,0},
-                {0,1,5,0,0,9,0,8,0},
-                {0,3,0,0,0,1,0,0,0},
-                {5,0,0,6,2,3,0,0,4},
-                {0,0,0,9,0,0,0,1,0},
-                {0,8,0,5,0,0,2,3,0},
-                {0,0,0,0,7,0,0,0,0},
-                {6,0,0,0,0,0,7,5,0}};
 
 
-//        System.out.println(s.toString());
-
-//        System.out.println();
-
-        Sudoku s = new Sudoku(board3);
-        System.out.println(s);
     }
+
 
 
     public List<List<Square>> getRows() {
