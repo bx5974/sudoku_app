@@ -184,11 +184,11 @@ public class SudokuTest {
 //                System.out.println("\n" + s);
                 s = Solver.solve(s);
 //                System.out.println(s);
-                if (Solver.isSolved(s))
-                    System.out.println("solved" + index++);
-                else
-                    System.out.println("unsolved: " + index++);
-//                Assert.assertThat("board is solved: " , Solver.isSolved(s), is(Boolean.TRUE));
+//                if (Solver.isSolved(s))
+//                    System.out.println("solved" + index++);
+//                else
+//                    System.out.println("unsolved: " + index++);
+                Assert.assertThat("board is solved: " , Solver.isSolved(s), is(Boolean.TRUE));
             }
         }
     }

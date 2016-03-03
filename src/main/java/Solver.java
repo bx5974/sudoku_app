@@ -22,7 +22,16 @@ public class Solver {
         System.out.println(board);
     }
 
-    public static Sudoku solve(Sudoku board){
+    public static Sudoku solve(Sudoku board) {
+
+        Sudoku solved = trySolve(copyBoard(board));
+        while (!isSolved(solved))
+            solved = trySolve(copyBoard(board));
+        board = copyBoard(solved);
+        return board;
+    }
+
+    public static Sudoku trySolve(Sudoku board){
 
 //        simpleSolve(board);
 
@@ -50,7 +59,7 @@ public class Solver {
                     board.getSquares().get(nextTry.id).legalValues.add(nextTry.value);
 //                System.out.println("removing " + nextTry.toString());
             } else {
-                return solve(copy);
+                return trySolve(copy);
             }
 //            System.out.println(board.getMoveCount());
         }
