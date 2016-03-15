@@ -27,41 +27,31 @@ public class Solver {
         Sudoku solved = trySolve(copyBoard(board));
         while (!isSolved(solved))
             solved = trySolve(copyBoard(board));
-        board = copyBoard(solved);
-        return board;
+        return solved;
     }
 
     public static Sudoku trySolve(Sudoku board){
 
-//        simpleSolve(board);
-
         if (isSolved(board)){
-//            System.out.println(board);
             return board;
         }
 
         while (!isSolved(board)) {
-//            System.out.println(board);
-//            System.out.println(board.getMoveCount());
             if (!ok(board)) {
-                System.out.println("bad board");
                 return board;
             }
             Sudoku copy = copyBoard(board);
             Sudoku.Move nextTry = tryMove(copy);
             if (isSolved(board)) {
-//                System.out.println(board.toString());
                 return board;
             }
             if (nextTry != null) {
                 board.getSquares().get(nextTry.id).legalValues.remove(nextTry.value);
                 if (!ok(board))
                     board.getSquares().get(nextTry.id).legalValues.add(nextTry.value);
-//                System.out.println("removing " + nextTry.toString());
             } else {
                 return trySolve(copy);
             }
-//            System.out.println(board.getMoveCount());
         }
         return board;
 
